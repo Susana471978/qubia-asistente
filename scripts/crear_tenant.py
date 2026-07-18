@@ -6,9 +6,14 @@ Uso:
         --nombre "Clinica Dental La Laguna" \
         --origins https://clinicalaguna.es,https://www.clinicalaguna.es \
         --email-leads info@clinicalaguna.es
+
+    python scripts/crear_tenant.py --slug inmo-teide \
+        --nombre "Inmobiliaria Teide" \
+        --desde-json tenants/inmo-teide.json
 """
 import argparse
 import asyncio
+import json
 import re
 import sys
 from datetime import datetime, timezone
@@ -32,7 +37,26 @@ async def main() -> None:
     p.add_argument("--email-leads", default="")
     p.add_argument("--asistente", default="Asistente")
     p.add_argument("--status", default="trial", choices=["trial", "active", "suspended"])
+    p.add_argument(
+        "--desde-json",
+        default="",
+        help="Ruta a un JSON con el tenant completo (conocimiento, reglas_nivel1, ...)",
+    )
     args = p.parse_args()
+
+    extra: dict = {}
+    if args.desde_json:
+        ruta_json = Path(args.desde_json)
+        if not ruta_json.is_file():
+            sys.exit(f"ERROR: no existe el fichero {ruta_json}")
+        try:
+            extra = json.loads(ruta_json.read_text(encoding="utf-8"))
+        except json.JSONDecodeError as e:
+            sys.exit(f"ERROR: JSON invalido en {ruta_json}: {e}")
+        if not isinstance(extra, dict):
+            sys.exit("ERROR: el JSON debe ser un objeto.")
+        for protegido in ("slug", "auth", "created_at", "updated_at"):
+            extra.pop(protegido, None)
 
     if not SLUG_RE.match(args.slug):
         sys.exit("ERROR: slug invalido. Usa minusculas, numeros y guiones.")
@@ -98,6 +122,14 @@ async def main() -> None:
         "facturacion": {"alta": ahora, "cuota_mensual": 0, "estado_pago": "al_corriente"},
     }
 
+    if extra:
+        for clave, valor in extra.items():
+            if isinstance(valor, dict) and isinstance(doc.get(clave), dict):
+                doc[clave].update(valor)
+            else:
+                doc[clave] = valor
+        doc["auth"]["allowed_origins"] = origins or doc["auth"].get("allowed_origins", [])
+
     await db.tenants.insert_one(doc)
     client.close()
 
@@ -105,7 +137,11 @@ async def main() -> None:
     print(f"  slug        : {args.slug}")
     print(f"  status      : {args.status}")
     print(f"  public_key  : {key}")
-    print(f"  origins     : {origins or '(ninguno - añadir antes de produccion)'}")
+    print(f"  origins     : {doc['auth']['allowed_origins'] or '(ninguno - añadir antes de produccion)'}")
+    con = doc.get("conocimiento", {})
+    print(f"  servicios   : {len(con.get('servicios', []))}")
+    print(f"  faqs        : {len(con.get('faqs', []))}")
+    print(f"  reglas nv1  : {len(doc.get('reglas_nivel1', []))}")
     print(f"\n  <script src=\"https://cdn.qubia.es/widget/v1.js\"")
     print(f"          data-qubia-key=\"{key}\"")
     print(f"          data-api=\"https://api.qubia.es\"></script>\n")
