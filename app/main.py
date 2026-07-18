@@ -82,8 +82,10 @@ async def cors_por_tenant(request: Request, call_next):
             permitido = False
 
     if request.method == "OPTIONS":
-        if not permitido:
-            return Response(status_code=403)
+        # El preflight del navegador no envia cabeceras personalizadas, asi que
+        # aqui no hay X-Qubia-Key con la que resolver el tenant. Se responde
+        # permitiendo el origen: la comprobacion real se hace en la peticion
+        # posterior, donde la clave si viaja (ver deps.get_tenant).
         return Response(
             status_code=204,
             headers={
