@@ -1,0 +1,152 @@
+{
+  "nombre": "Inmobiliaria Anaga",
+  "status": "trial",
+  "identidad": {
+    "nombre_asistente": "Nora",
+    "tono": "cercano, claro y profesional, sin tecnicismos",
+    "idioma_principal": "es",
+    "idiomas_soportados": ["es", "en", "de"],
+    "saludo_inicial": "Hola, soy Nora, de Inmobiliaria Anaga. ¿Buscas vivienda, quieres vender o tienes alguna duda?",
+    "mensaje_fuera_alcance": "Eso prefiero que te lo confirme el equipo. ¿Quieres que te llamen?",
+    "prompt_extra": "Cuando alguien pregunte por un inmueble concreto, da los datos que tengas y ofrece siempre concertar una visita. Nunca confirmes disponibilidad ni negocies precio: eso lo cierra el equipo. Si preguntan por algo que no esta en la cartera, di que la cartera cambia cada semana y ofrece que les avisemos cuando entre algo asi."
+  },
+  "conocimiento": {
+    "descripcion_negocio": "Inmobiliaria Anaga es una agencia de Santa Cruz de Tenerife especializada en compraventa y alquiler de vivienda en el area metropolitana: Santa Cruz, La Laguna y la costa de Anaga. Trabajamos tambien la administracion de comunidades de propietarios. Llevamos 18 anos en el mismo local de la calle Castillo y la mayoria de nuestros clientes llegan por recomendacion.",
+    "horarios": "Lunes a viernes de 9:30 a 14:00 y de 16:30 a 19:30. Sabados de 10:00 a 13:30 con cita previa.",
+    "direccion": "Calle Castillo 42, 38003 Santa Cruz de Tenerife",
+    "telefono": "922 24 18 60",
+    "email": "info@inmobiliariaanaga.es",
+    "servicios": [
+      {
+        "nombre": "Compraventa de vivienda",
+        "descripcion": "Buscamos, valoramos y gestionamos toda la operacion hasta la firma en notaria. Honorarios del 3% sobre el precio de venta, solo si se vende",
+        "precio_desde": null
+      },
+      {
+        "nombre": "Alquiler de larga temporada",
+        "descripcion": "Seleccion de inquilino con estudio de solvencia, contrato y deposito de fianza. Una mensualidad como honorarios",
+        "precio_desde": null
+      },
+      {
+        "nombre": "Valoracion de inmueble",
+        "descripcion": "Informe de valor de mercado con comparables de la zona, en 48 horas. Gratuito y sin compromiso",
+        "precio_desde": null
+      },
+      {
+        "nombre": "Administracion de comunidades",
+        "descripcion": "Contabilidad, juntas, seguros, siniestros y proveedores. Precio por vivienda y mes",
+        "precio_desde": 8.5
+      },
+      {
+        "nombre": "Piso reformado en el centro",
+        "descripcion": "78 m2, 3 habitaciones, 2 banos, segunda planta con ascensor, calle Numancia. Reforma integral de 2024, cocina amueblada, listo para entrar",
+        "precio_desde": 228000
+      },
+      {
+        "nombre": "Atico con terraza en La Laguna",
+        "descripcion": "95 m2 mas 40 m2 de terraza, 3 habitaciones, plaza de garaje incluida, zona Padre Anchieta",
+        "precio_desde": 315000
+      },
+      {
+        "nombre": "Casa terrera en Taganana",
+        "descripcion": "110 m2 en parcela de 400 m2, 2 habitaciones, vistas al mar, necesita actualizacion",
+        "precio_desde": 189000
+      },
+      {
+        "nombre": "Local comercial en Rambla",
+        "descripcion": "62 m2 a pie de calle, escaparate de 5 metros, actualmente alquilado con contrato hasta 2028",
+        "precio_desde": 145000
+      },
+      {
+        "nombre": "Piso en alquiler en Ofra",
+        "descripcion": "70 m2, 3 habitaciones, amueblado, cuarta planta con ascensor. Alquiler mensual, se pide nomina y aval",
+        "precio_desde": 850
+      }
+    ],
+    "faqs": [
+      {
+        "pregunta": "Cobran algo por valorar mi casa?",
+        "respuesta": "No, la valoracion es gratuita y sin compromiso. Vamos a ver el inmueble y en 48 horas tienes un informe con el valor de mercado y los comparables de la zona."
+      },
+      {
+        "pregunta": "Cuanto cobran por vender un piso?",
+        "respuesta": "Un 3% sobre el precio final de venta, y solo se cobra si el piso se vende. No hay cuotas ni gastos por adelantado."
+      },
+      {
+        "pregunta": "Que necesito para alquilar una vivienda con vosotros?",
+        "respuesta": "Nomina o justificante de ingresos, DNI y normalmente un aval o seguro de impago. Hacemos un estudio de solvencia antes de firmar."
+      },
+      {
+        "pregunta": "Trabajan con extranjeros que compran desde fuera?",
+        "respuesta": "Si, con frecuencia. Ayudamos con el NIE, la apertura de cuenta y el poder notarial si el comprador no puede estar presente en la firma."
+      },
+      {
+        "pregunta": "Puedo ver un piso el fin de semana?",
+        "respuesta": "Los sabados de 10:00 a 13:30 hacemos visitas con cita previa. Fuera de ese horario lo vemos segun disponibilidad del propietario."
+      },
+      {
+        "pregunta": "Se puede negociar el precio de los inmuebles?",
+        "respuesta": "Toda oferta se traslada al propietario. El equipo te dice enseguida si hay margen en ese inmueble concreto."
+      },
+      {
+        "pregunta": "Cuanto cuesta que administren mi comunidad?",
+        "respuesta": "Desde 8,50 EUR por vivienda y mes, segun el numero de vecinos y los servicios que tenga el edificio. Te preparamos un presupuesto cerrado sin coste."
+      }
+    ],
+    "documentos": []
+  },
+  "reglas_nivel1": [
+    {
+      "id": "horario",
+      "keywords": ["horario", "horarios", "abren", "abris", "abierto", "cerrado", "a que hora", "cuando abren"],
+      "respuesta": "Abrimos de lunes a viernes de 9:30 a 14:00 y de 16:30 a 19:30. Los sabados atendemos de 10:00 a 13:30 con cita previa.",
+      "prioridad": 10
+    },
+    {
+      "id": "direccion",
+      "keywords": ["donde estais", "direccion", "ubicacion", "como llegar", "oficina", "donde os encuentro"],
+      "respuesta": "Estamos en la calle Castillo 42, en pleno centro de Santa Cruz de Tenerife. Si vienes en coche, el parking mas cercano es el de la plaza de Espana.",
+      "prioridad": 10
+    },
+    {
+      "id": "telefono",
+      "keywords": ["telefono", "llamar", "numero", "contacto", "whatsapp"],
+      "respuesta": "Puedes llamarnos al 922 24 18 60 en horario de oficina, o escribir a info@inmobiliariaanaga.es. Si prefieres, dejame tu numero y te llamamos nosotros.",
+      "prioridad": 9
+    },
+    {
+      "id": "valoracion-gratis",
+      "keywords": ["valorar", "valoracion", "tasar", "tasacion", "cuanto vale mi", "cuanto cuesta valorar"],
+      "respuesta": "La valoracion es gratuita y sin compromiso. Vemos el inmueble y en 48 horas te damos un informe con el valor de mercado y los comparables de la zona. ¿Quieres que te llamemos para concertarla?",
+      "prioridad": 8
+    },
+    {
+      "id": "honorarios-venta",
+      "keywords": ["comision", "honorarios", "cuanto cobrais", "que cobrais", "porcentaje"],
+      "respuesta": "En compraventa cobramos un 3% sobre el precio final, y solo si el inmueble se vende. No hay cuotas ni gastos por adelantado. En alquiler, una mensualidad.",
+      "prioridad": 8
+    }
+  ],
+  "leads": {
+    "activo": true,
+    "campos": ["nombre", "telefono", "email", "motivo"],
+    "campos_obligatorios": ["nombre", "telefono"],
+    "trigger": "intencion"
+  },
+  "limites": {
+    "mensajes_dia": 500,
+    "mensajes_minuto": 10,
+    "max_turnos_memoria": 6
+  },
+  "modelo": {
+    "proveedor": "groq",
+    "nombre": null,
+    "temperatura": 0.4,
+    "max_tokens": 500
+  },
+  "web": {
+    "dominio": "",
+    "cloudflare_project": "qubia-inmo-anaga",
+    "plantilla_version": "1.0.0"
+  }
+}
