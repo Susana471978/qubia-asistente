@@ -5,20 +5,20 @@ from app.core import errors
 from app.core.rate_limit import limiter
 from app.db import get_db
 from app.deps import get_tenant
-from app.models.chat import ChatRequest, ChatResponse
+from app.models.chat import ChatRequest, ChatResponse, ChatResponseV2
 from app.services import conversaciones, usage
 
 router = APIRouter(prefix="/v1", tags=["chat"])
 
 
-@router.post("/chat", response_model=ChatResponse)
+@router.post("/chat", response_model=ChatResponseV2)
 @limiter.limit("20/minute")
 async def chat(
     request: Request,
     response: Response,
     payload: ChatRequest,
     tenant: dict = Depends(get_tenant),
-) -> ChatResponse:
+) -> ChatResponseV2:
     db = get_db()
     tenant_id = tenant["_id"]
     limites = tenant.get("limites", {})
@@ -40,10 +40,18 @@ async def chat(
     )
     await usage.incrementar(db, tenant_id, nivel)
 
-    return ChatResponse(
+    # Contrato Core 2.0: sobre enriquecido (ui/actions/lead).
+    # En Sprint 1 ui=None y actions=[] (el motor de acciones llega en Sprint 2).
+    # Se mantienen alias viejos para compatibilidad con el widget actual.
+    return ChatResponseV2(
+        message=respuesta,
+        session_id=payload.session_id,
+        level=nivel,
+        ui=None,
+        actions=[],
+        lead={"suggest": sugerir_lead},
         respuesta=respuesta,
         nivel=nivel,
-        session_id=payload.session_id,
         sugerir_lead=sugerir_lead,
     )
 
