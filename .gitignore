@@ -7,3 +7,5 @@ venv/
 dist/
 *.bak_*
 patch_*.py
+demo.html
+leer_key.py
