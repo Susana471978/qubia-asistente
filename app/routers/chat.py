@@ -7,6 +7,7 @@ from app.db import get_db
 from app.deps import get_tenant
 from app.models.chat import ChatRequest, ChatResponse, ChatResponseV2
 from app.services import conversaciones, usage
+from app.actions import registry
 
 router = APIRouter(prefix="/v1", tags=["chat"])
 
@@ -56,6 +57,21 @@ async def chat(
     )
 
 
+def _resolver_quick_actions(tenant: dict) -> list[dict]:
+    """Quick actions como objetos {type, label}.
+
+    1) Si el tenant define quick_actions (lista de strings), se respetan como
+       acciones CUSTOM (el texto manda, sin type especifico del vertical).
+    2) Si no, se toman las acciones por defecto del vertical desde el registry.
+    3) Vertical "general" no expone acciones -> lista vacia.
+    """
+    propias = tenant.get("quick_actions") or []
+    if propias:
+        return [{"type": "CUSTOM", "label": str(x)} for x in propias]
+    vertical = tenant.get("vertical", "general")
+    return [a.as_dict() for a in registry.acciones_de_vertical(vertical)]
+
+
 @router.get("/config")
 @limiter.limit("30/minute")
 async def config_publica(
@@ -90,7 +106,7 @@ async def config_publica(
             "booking": features.get("booking_enabled", False),
             "properties": features.get("properties_enabled", False),
         },
-        "quick_actions": tenant.get("quick_actions", []),
+        "quick_actions": _resolver_quick_actions(tenant),
         # --- alias de compatibilidad (widget viejo) ---
         "nombre_asistente": identidad.get("nombre_asistente", "Asistente"),
         "saludo_inicial": identidad.get("saludo_inicial", ""),
