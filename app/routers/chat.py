@@ -53,13 +53,41 @@ async def chat(
 async def config_publica(
     request: Request, response: Response, tenant: dict = Depends(get_tenant)
 ) -> dict:
-    """El widget lee esto al arrancar: identidad visible, nada sensible."""
+    """El widget lee esto al arrancar: contrato Core 2.0, nada sensible."""
     identidad = tenant.get("identidad", {})
+    branding = tenant.get("branding", {})
+    features = tenant.get("features", {})
+    leads = tenant.get("leads", {})
+
     return {
+        "assistant": {
+            "name": identidad.get("nombre_asistente", "Asistente"),
+            "greeting": identidad.get("saludo_inicial", ""),
+        },
+        "branding": {
+            "business_name": branding.get("business_name", tenant.get("nombre", "")),
+            "logo": branding.get("logo_url", ""),
+            "primary": branding.get("primary_color", "#0B1220"),
+            "secondary": branding.get("secondary_color", "#0D2B45"),
+            "accent": branding.get("accent_color", "#00D4C7"),
+            "silver": branding.get("silver_color", "#D7E2EB"),
+            "champagne": branding.get("champagne_color", "#C8A86B"),
+            "assistant_icon": branding.get("assistant_icon", ""),
+            "widget_position": branding.get("widget_position", "bottom-right"),
+            "widget_theme": branding.get("widget_theme", "dark"),
+        },
+        "vertical": tenant.get("vertical", "general"),
+        "features": {
+            "leads": features.get("lead_enabled", leads.get("activo", True)),
+            "booking": features.get("booking_enabled", False),
+            "properties": features.get("properties_enabled", False),
+        },
+        "quick_actions": tenant.get("quick_actions", []),
+        # --- alias de compatibilidad (widget viejo) ---
         "nombre_asistente": identidad.get("nombre_asistente", "Asistente"),
         "saludo_inicial": identidad.get("saludo_inicial", ""),
         "idioma_principal": identidad.get("idioma_principal", "es"),
-        "leads_activo": tenant.get("leads", {}).get("activo", False),
-        "campos_lead": tenant.get("leads", {}).get("campos", []),
-        "campos_obligatorios": tenant.get("leads", {}).get("campos_obligatorios", []),
+        "leads_activo": leads.get("activo", False),
+        "campos_lead": leads.get("campos", []),
+        "campos_obligatorios": leads.get("campos_obligatorios", []),
     }
