@@ -4,6 +4,26 @@ from typing import Literal
 from pydantic import BaseModel, Field
 
 Status = Literal["active", "suspended", "trial"]
+Vertical = Literal["general", "real_estate", "hospitality", "guest"]
+
+
+class Branding(BaseModel):
+    business_name: str = ""
+    logo_url: str = ""
+    primary_color: str = "#0B1220"
+    secondary_color: str = "#0D2B45"
+    accent_color: str = "#00D4C7"
+    silver_color: str = "#D7E2EB"
+    champagne_color: str = "#C8A86B"
+    assistant_icon: str = ""
+    widget_position: Literal["bottom-right", "bottom-left"] = "bottom-right"
+    widget_theme: Literal["dark", "light", "auto"] = "dark"
+
+
+class Features(BaseModel):
+    lead_enabled: bool = True
+    booking_enabled: bool = False
+    properties_enabled: bool = False
 
 
 class Auth(BaseModel):
@@ -111,6 +131,11 @@ class Tenant(BaseModel):
     web: Web = Field(default_factory=Web)
     facturacion: Facturacion = Field(default_factory=Facturacion)
 
+    vertical: Vertical = "general"
+    branding: Branding = Field(default_factory=Branding)
+    features: Features = Field(default_factory=Features)
+    quick_actions: list[str] = Field(default_factory=list)
+
 
 class TenantCreate(BaseModel):
     slug: str
@@ -119,6 +144,10 @@ class TenantCreate(BaseModel):
     allowed_origins: list[str] = Field(default_factory=list)
     identidad: Identidad = Field(default_factory=Identidad)
     conocimiento: Conocimiento = Field(default_factory=Conocimiento)
+    vertical: Vertical = "general"
+    branding: Branding = Field(default_factory=Branding)
+    features: Features = Field(default_factory=Features)
+    quick_actions: list[str] = Field(default_factory=list)
 
 
 class TenantUpdate(BaseModel):
@@ -132,6 +161,10 @@ class TenantUpdate(BaseModel):
     modelo: ModeloCfg | None = None
     web: Web | None = None
     allowed_origins: list[str] | None = None
+    vertical: Vertical | None = None
+    branding: Branding | None = None
+    features: Features | None = None
+    quick_actions: list[str] | None = None
 
 
 class TenantPublic(BaseModel):
